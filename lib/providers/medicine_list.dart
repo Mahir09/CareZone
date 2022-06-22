@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import './medicine.dart';
-import '../models/custom_exceptions.dart';
+import '../widgets/custom_exceptions.dart';
 
 //TODO: convert this list into a firestore map
 //TODO: create a default grid item with intial values

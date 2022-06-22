@@ -1,15 +1,12 @@
-import 'package:carezone/providers/auth.dart';
-import 'package:carezone/providers/medicine_list.dart';
-import 'package:carezone/screens/auth_screen.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../providers/medicine.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '/providers/auth.dart';
+import '/screens/auth_screen.dart';
 import '../screens/inventory.dart';
 import '../screens/logbook_screen.dart';
-//import 'package:provider/provider.dart';
-
 import '../screens/medicine_overview.dart';
 
 class TabBarScreen extends StatefulWidget {
@@ -18,101 +15,109 @@ class TabBarScreen extends StatefulWidget {
 }
 
 class _TabBarScreenState extends State<TabBarScreen> {
-
   double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
+
+  var _prefs;
+  var _userData;
+  var _isLoading = false;
+
+  @override
+  initState() {
+    setState(() {
+      _isLoading = true;
+    });
+    Future.delayed(Duration.zero, () async {
+      _prefs = await SharedPreferences.getInstance();
+      _userData =
+          json.decode(_prefs.getString('userData')) as Map<String, Object>;
+      if (_userData != null) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final medicineData = Provider.of<MedicineList>(context);
-    // final meds = Provider.of<Medicine>(context);
-
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        drawer: Drawer(
-          child: ListView(
-            children: <Widget>[
-              Container(
-                height: 50.0,
-              ),
-              CircleAvatar(
-                radius: 60.0,
-                backgroundColor: Colors.black,
-                backgroundImage: NetworkImage(
-                    'https://image.shutterstock.com/image-vector/user-login-authenticate-icon-human-260nw-1365533969.jpg'),
-              ),
-              Text(
-                'User Name',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Container(
-                child: Column(
+        drawer: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Drawer(
+                child: ListView(
                   children: <Widget>[
-                    Text(''),
+                    Container(
+                      height: 50.0,
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 100,
+                      child: Icon(
+                        Icons.account_circle,
+                        size: 200,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      _userData['userName'] != null
+                          ? _userData['userName']
+                          : "Loading",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      _userData['emailId'] != null
+                          ? _userData['emailId']
+                          : "Loading",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
                   ],
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SwitchListTile(
-                    onChanged: (bool v) {
-                      // medicineData.toggleMorningStatus();
-                      // medicineData.showMorningOnly = true;
-                      // medicineData.notifyListeners();
-                      // if (toDouble(meds.alarmTime) >= 6.00 && toDouble(meds.alarmTime) < 12.00)
-                      //   meds.isMorning = !meds.isMorning;
-                      // meds.notifyListeners();
-                    },
-                    value: false,
-                    title: const Text("Morning"),
-                    secondary: Icon(Icons.wb_sunny),
-                  ),
-                  SwitchListTile(
-                    onChanged: (bool v) {
-                      // medicineData.showAfternoonOnly = true;
-                      // medicineData.notifyListeners();
-                      // if (toDouble(meds.alarmTime) >= 12.00 && toDouble(meds.alarmTime) < 4.00)
-                      //   meds.isAfternoon = !meds.isAfternoon;
-                      // meds.notifyListeners();
-                    },
-                    value: false,
-                    title: const Text("Afternoon"),
-                    secondary: Icon(Icons.wb_sunny),
-                  ),
-                  SwitchListTile(
-                    onChanged: (bool v) {
-                      // medicineData.showEveningOnly = true;
-                      // medicineData.notifyListeners();
-                      // if (toDouble(meds.alarmTime) >= 4.00 && toDouble(meds.alarmTime) < 6.00)
-                      //   meds.isEvening = !meds.isEvening;
-                      // meds.notifyListeners();
-                      },
-                    value: false,
-                    title: const Text("Evening"),
-                    secondary: Icon(Icons.nightlight_round),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
         appBar: AppBar(
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.logout),
-                  onPressed: () {
-                    Provider.of<Auth>(context, listen: false).logout();
-                    //Navigator.of(context).pop();
-                    Navigator.of(context)
-                        .pushReplacementNamed(AuthScreen.routeName);
-                  },
-                ),
-              ]),
+              child: Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.logout),
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Logout'),
+                        content: Text("Do you want to logout?"),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("No"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('Yes'),
+                            onPressed: () {
+                              Provider.of<Auth>(context, listen: false)
+                                  .logout();
+                              Navigator.of(context)
+                                  .pushReplacementNamed(AuthScreen.routeName);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
           title: Text('CareZone'),

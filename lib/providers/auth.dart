@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:carezone/models/custom_exceptions.dart';
+import '../widgets/custom_exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +29,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> _authenticate(
-      String email, String password, String urlSeg) async {
+      String email, String password, String userName, String urlSeg) async {
     final url =
         'https://identitytoolkit.googleapis.com/v1/$urlSeg?key=AIzaSyDC3y3EnE-TJuyY6mDAN-TFpgAclses92c';
     try {
@@ -57,28 +56,31 @@ class Auth with ChangeNotifier {
           ),
         ),
       );
-      _autoLogout();
-      notifyListeners();
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode(
         {
           'token': _token,
           'userId': _userId,
           'expiryDate': _expiryDate.toIso8601String(),
+          'emailId' : email,
+          'userName' : userName,
         },
       );
       prefs.setString('userData', userData);
+
+      notifyListeners();
+      _autoLogout();
     } catch (error) {
       throw error;
     }
   }
 
-  Future<void> signUp(String email, String password) async {
-    return _authenticate(email, password, 'accounts:signUp');
+  Future<void> signUp(String email, String password, String userName) async {
+    return _authenticate(email, password, userName, 'accounts:signUp');
   }
 
-  Future<void> signIn(String email, String password) async {
-    return _authenticate(email, password, 'accounts:signInWithPassword');
+  Future<void> signIn(String email, String password, String userName) async {
+    return _authenticate(email, password, userName, 'accounts:signInWithPassword');
   }
 
   Future<bool> tryAutoLogIn() async {
@@ -95,7 +97,7 @@ class Auth with ChangeNotifier {
     _token = extractedData['token'];
     _userId = extractedData['userId'];
     _expiryDate = DateTime.parse(extractedData['expiryDate']);
-    print("Token : $_token\nUserId : $_userId\nExpiryDate : $_expiryDate");
+    // print("Token : $_token\nUserId : $_userId\nExpiryDate : $_expiryDate");
     notifyListeners();
     _autoLogout();
     return true;

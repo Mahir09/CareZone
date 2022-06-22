@@ -1,8 +1,7 @@
-import '/models/custom_exceptions.dart';
+import '../widgets/custom_exceptions.dart';
 import '/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../constants.dart';
 
 enum AuthMode { Signup, Login }
@@ -16,22 +15,26 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+
   AuthMode _authMode = AuthMode.Login;
+
   Map<String, String> _authData = {
     'email': '',
     'password': '',
     'userName': '',
   };
+
   var _isLoading = false;
   bool submitValid = true;
-  // final TextEditingController _otpcontroller = TextEditingController();
+  bool _passwordVisible = false;
+
   final TextEditingController _emailcontroller = TextEditingController();
 
   void _displayErr(String message) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('An error occurred'),
+        title: Text('Error occurred'),
         content: Text(message),
         actions: [
           FlatButton(
@@ -55,11 +58,11 @@ class _AuthScreenState extends State<AuthScreen> {
     });
     try {
       if (_authMode == AuthMode.Login) {
-        await Provider.of<Auth>(context, listen: false)
-            .signIn(_authData['email'], _authData['password']);
+        await Provider.of<Auth>(context, listen: false).signIn(
+            _authData['email'], _authData['password'], _authData['userName']);
       } else {
-        await Provider.of<Auth>(context, listen: false)
-            .signUp(_authData['email'], _authData['password']);
+        await Provider.of<Auth>(context, listen: false).signUp(
+            _authData['email'], _authData['password'], _authData['userName']);
       }
     } on CustomExceptions catch (error) {
       var errMessage = 'Could not authenticate. Please try again!';
@@ -90,40 +93,14 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  // void _sendOtp() async {
-  //   // try {
-  //   //   // final user = FirebaseAuth.instance.currentUser;
-  //   //   await _authData['email'].sendEmailVerification();
-  //   //   print(_emailcontroller);
-  //   //   setState(() {
-  //   //     submitValid = true;
-  //   //   });
-  //   // } catch (error) {
-  //   //   const errMessage = 'Please try again';
-  //   //   _displayErr(errMessage);
-  //   // }
-  //   // EmailAuth().sessionName = "CareZone";
-  //   // bool result =
-  //   //     await EmailAuth().sendOtp(recipientMail: _emailcontroller.value.text);
-  //   // if (result) {
-  //   //   setState(() {
-  //   //     submitValid = true;
-  //   //   });
-  //   // }
-  // }
-
-  // Future<void> verify() async {
-  //   await FirebaseAuth.instance.currentUser.reload();
-  //   setState(() {
-  //     submitValid = FirebaseAuth.instance.currentUser.emailVerified;
-  //   });
-  //   print(submitValid);
-  // }
+  @override
+  void initState() {
+    _passwordVisible = false;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 25.0),
@@ -132,9 +109,7 @@ class _AuthScreenState extends State<AuthScreen> {
             children: <Widget>[
               Image.asset('assets/images/signin.jpg',
                   width: double.infinity, height: 200.0),
-              SizedBox(
-                height: 2.0,
-              ),
+              SizedBox(height: 2.0),
               Text(
                 'CareZone',
                 style: TextStyle(
@@ -142,22 +117,6 @@ class _AuthScreenState extends State<AuthScreen> {
                   fontSize: 50.0,
                 ),
               ),
-              // ElevatedButton.icon(
-              //   onPressed: () {
-              //     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-              //     provider.googleLogin();
-              //   },
-              //   label: const Text('Sign Up Google'),
-              //   icon: const Icon(Icons.accessibility_new),
-              // ),
-              // ElevatedButton.icon(
-              //   onPressed: () {
-              //     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-              //     provider.googleLogin();
-              //   },
-              //   label: const Text('Sign In Google'),
-              //   icon: const Icon(Icons.login),
-              // ),
               SizedBox(width: double.infinity, height: 35.0),
               Form(
                 key: _formKey,
@@ -178,7 +137,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(),
                         icon: Icon(Icons.email_outlined),
-                        labelText: 'Enter your E-mail id',
+                        labelText: 'Enter Your Email Id',
                         contentPadding: EdgeInsets.symmetric(vertical: 5.0),
                         // border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
                       ),
@@ -188,17 +147,17 @@ class _AuthScreenState extends State<AuthScreen> {
                       TextFormField(
                           validator: (value) {
                             if (value.isEmpty)
-                              return "Please enter a valid usename";
+                              return "Please enter a valid username";
                             else
                               return null;
                           },
                           onSaved: (value) {
-                            _authData['username'] = value;
+                            _authData['userName'] = value;
                           },
                           decoration: InputDecoration(
                             border: UnderlineInputBorder(),
                             icon: Icon(Icons.drive_file_rename_outline),
-                            labelText: 'Enter your Username',
+                            labelText: 'Enter Your Username',
                             contentPadding: EdgeInsets.symmetric(vertical: 5.0),
                           )),
                     SizedBox(width: double.infinity, height: 5.0),
@@ -212,82 +171,28 @@ class _AuthScreenState extends State<AuthScreen> {
                       onSaved: (value) {
                         _authData['password'] = value;
                       },
-                      obscureText: true,
+                      obscureText: !_passwordVisible,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(),
                         icon: Icon(Icons.lock_outlined),
                         labelText: 'Enter Your Password',
                         contentPadding: EdgeInsets.symmetric(vertical: 5.0),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Theme.of(context).primaryColorDark,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
+                        ),
                       ),
                     ),
                     SizedBox(width: double.infinity, height: 20.0),
-                    // if (_authMode == AuthMode.Signup)
-                    //   FlatButton(
-                    //     child: Text('Send Link'),
-                    //     shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(40.0)),
-                    //     color: Colors.green,
-                    //     textColor: Colors.white,
-                    //     onPressed: () {
-                    //       _sendOtp();
-                    //       showModalBottomSheet(
-                    //         isScrollControlled: true,
-                    //         context: context,
-                    //         builder: (context) {
-                    //           return SingleChildScrollView(
-                    //             child: Container(
-                    //               padding: EdgeInsets.only(
-                    //                   bottom: MediaQuery.of(context)
-                    //                       .viewInsets
-                    //                       .bottom),
-                    //               height: 200,
-                    //               child: Center(
-                    //                 child: Column(
-                    //                   crossAxisAlignment:
-                    //                       CrossAxisAlignment.center,
-                    //                   children: <Widget>[
-                    //                     // TextFormField(
-                    //                     //   controller: _otpcontroller,
-                    //                     //   decoration: InputDecoration(
-                    //                     //     icon: Icon(Icons.lock),
-                    //                     //     hintText: 'Enter OTP',
-                    //                     //     contentPadding:
-                    //                     //         EdgeInsets.symmetric(
-                    //                     //             vertical: 20.0,
-                    //                     //             horizontal: 30.0),
-                    //                     //     border: OutlineInputBorder(
-                    //                     //         borderRadius:
-                    //                     //             BorderRadius.circular(
-                    //                     //                 30.0)),
-                    //                     //   ),
-                    //                     // ),
-                    //                     SizedBox(
-                    //                         width: double.infinity,
-                    //                         height: 10.0),
-                    //                     FlatButton(
-                    //                       onPressed: !submitValid
-                    //                           ? null
-                    //                           : () {
-                    //                               verify();
-                    //                               Navigator.of(context).pop();
-                    //                             },
-                    //                       child: Text("Verify"),
-                    //                       disabledColor: Colors.grey[600],
-                    //                       shape: RoundedRectangleBorder(
-                    //                           borderRadius:
-                    //                               BorderRadius.circular(40.0)),
-                    //                       color: Colors.green,
-                    //                       textColor: Colors.white,
-                    //                     )
-                    //                   ],
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           );
-                    //         },
-                    //       );
-                    //     },
-                    //   ),
                     if (_isLoading) CircularProgressIndicator(),
                     if (!_isLoading)
                       FlatButton(
@@ -295,10 +200,6 @@ class _AuthScreenState extends State<AuthScreen> {
                             (_authMode == AuthMode.Signup && !submitValid)
                                 ? null
                                 : _submit,
-                        /*  Navigator.push(
-                context,
-                new MaterialPageRoute(builder: (ctxt) => new TabBarScreen()),
-              ); */
                         child: Text(_authMode == AuthMode.Login
                             ? 'Login'
                             : 'Create Account'),

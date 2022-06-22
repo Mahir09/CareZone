@@ -32,9 +32,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => Auth(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => GoogleSignInProvider(),
-        ),
         ChangeNotifierProxyProvider<Auth, MedicineList>(
           update: (context, auth, previousMeds) => MedicineList(auth.token,
               auth.userID, previousMeds == null ? [] : previousMeds.items),
@@ -63,7 +60,7 @@ class MyApp extends StatelessWidget {
           title: 'CareZone',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            primarySwatch: Colors.green,
+            primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           home: auth.isAuth
