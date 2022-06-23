@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/medicine_list.dart';
 import '../screens/edit_medicine.dart';
 import '../widgets/tabbar_screen.dart';
@@ -20,14 +19,6 @@ class _MedicineDetailState extends State<MedicineDetail> {
     final format = DateFormat.jm();
     return format.format(dt);
   }
-
-  /*@override
-   void initState() {
-    Future.delayed(Duration.zero).then((_) {
-      Navigator.of(context).pop();
-    });
-    super.initState();
-  } */
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +69,7 @@ class _MedicineDetailState extends State<MedicineDetail> {
                             MaterialPageRoute(
                                 builder: (context) => TabBarScreen()),
                           );
-                        }
-                        //TRY: put this in a initstate or a didchangedependencies
-
-                        ),
+                        }),
                   ],
                 ),
               );
@@ -90,88 +78,93 @@ class _MedicineDetailState extends State<MedicineDetail> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10.0),
-              height: 250,
-              child: Image(
-                image: loadedMedicine.imageurl != null
-                    ? NetworkImage(loadedMedicine.imageurl)
-                    : NetworkImage(
-                        'https://www.practostatic.com/practopedia-v2-images/res-750/aa8a521bcd0f4494ceb54bee5171d1c7c01ee09b1.jpg'),
+        child: Padding(
+          padding: const EdgeInsets.all(13.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                height: 150,
                 width: double.infinity,
-                height: 40,
-                fit: BoxFit.fill,
+                child: loadedMedicine.typeIndex == 0
+                    ? Image.asset("assets/images/syrup.png")
+                    : loadedMedicine.typeIndex == 1
+                        ? Image.asset("assets/images/pills.png")
+                        : loadedMedicine.typeIndex == 2
+                            ? Image.asset("assets/images/capsule.png")
+                            : loadedMedicine.typeIndex == 3
+                                ? Image.asset("assets/images/cream.png")
+                                : loadedMedicine.typeIndex == 4
+                                    ? Image.asset("assets/images/drops.png")
+                                    : Image.asset("assets/images/syringe.png"),
               ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 20,
-            ),
-            TextFormField(
-              readOnly: true,
-              decoration: InputDecoration(
-                helperText: 'Medicine Name',
-                hintText: loadedMedicine.title,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
+              SizedBox(
+                width: double.infinity,
+                height: 20,
               ),
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 20,
-            ),
-            TextFormField(
-              readOnly: true,
-              decoration: InputDecoration(
-                hintText: loadedMedicine.description,
-                helperText: 'Description',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
+              TextFormField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  helperText: 'Medicine Name',
+                  hintText: loadedMedicine.title,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+                style: TextStyle(fontSize: 20),
               ),
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 20,
-            ),
-            TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                hintText: formatTimeOfDay(loadedMedicine.alarmTime),
-                helperText: 'Alarm Time',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
+              SizedBox(
+                width: double.infinity,
+                height: 20,
               ),
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 20,
-            ),
-            TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                hintText: loadedMedicine.quantity.toString(),
-                helperText: 'Quantity',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
+              TextFormField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  hintText: loadedMedicine.description,
+                  helperText: 'Description',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+                style: TextStyle(fontSize: 20),
+                maxLines: 5,
               ),
-              style: TextStyle(fontSize: 20),
-            ),
-          ],
+              SizedBox(
+                width: double.infinity,
+                height: 20,
+              ),
+              TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  hintText: formatTimeOfDay(loadedMedicine.alarmTime),
+                  helperText: 'Alarm Time',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 20,
+              ),
+              TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  hintText: loadedMedicine.quantity.toString(),
+                  helperText: 'Quantity',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+                style: TextStyle(fontSize: 20),
+              ),
+            ],
+          ),
         ),
       ),
     );

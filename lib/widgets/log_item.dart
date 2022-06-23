@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class LogItem extends StatelessWidget {
   final String id;
@@ -15,7 +16,7 @@ class LogItem extends StatelessWidget {
         padding: EdgeInsets.all(8.0),
         child: ListTile(
           title: Text(title),
-          //trailing: Text(day.toString(),
+          trailing: Text(DateFormat('EEE, HH:mm').format(day))
         ), //FIX this
       ),
     );

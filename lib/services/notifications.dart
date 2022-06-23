@@ -14,11 +14,8 @@ class Notifications with ChangeNotifier {
   }
 
   void initNotifications() {
-    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('@mipmap/ic_launcher');
-    //var initializationSettingsIOS = IOSInitializationSettings(
-    //onDidReceiveLocalNotification: onDidReceiveLocalNotification);
 
     var initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
@@ -32,7 +29,7 @@ class Notifications with ChangeNotifier {
     var time = new Time(hour, minute, 0);
     await flutterLocalNotificationsPlugin.showDailyAtTime(
         id, title, body, time, getPlatformChannelSpecfics());
-    print('Notification Succesfully Scheduled at ${time.toString()}');
+    print('Notification Successfully Scheduled at ${time.toString()}');
     notifyListeners();
   }
 
@@ -42,7 +39,6 @@ class Notifications with ChangeNotifier {
         importance: Importance.max,
         priority: Priority.high,
         ticker: 'Medicine Reminder');
-    //var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
 

@@ -10,7 +10,6 @@ import 'providers/medicine_list.dart';
 import 'screens/add_medicine.dart';
 import 'screens/auth_screen.dart';
 import 'screens/edit_medicine.dart';
-import 'screens/google_sign_in.dart';
 import 'screens/inventory.dart';
 import 'screens/logbook_screen.dart';
 import 'screens/medicine_detail.dart';

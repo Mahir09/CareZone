@@ -35,6 +35,3 @@ class InventoryProvider with ChangeNotifier {
   }
 }
 
-/* void makeList(String itemId){
-  inventoryItems.addAll({});
-}*/

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/logbook_provider.dart';
 import '../widgets/log_item.dart';
 
@@ -18,16 +17,11 @@ class _LogbookScreenState extends State<LogbookScreen> {
   @override
   void initState() {
     Future.delayed(Duration.zero).then((_) async {
-      setState(() {
-        _isLoading = true;
-      });
+      setState(() => _isLoading = true);
       await Provider.of<LogBookProvider>(context, listen: false)
           .fetchAndSetLogItems();
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     });
-    // TODO: implement initState
     super.initState();
   }
 
@@ -40,21 +34,13 @@ class _LogbookScreenState extends State<LogbookScreen> {
           : Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Stack(
                     clipBehavior: Clip.hardEdge,
                     alignment: AlignmentDirectional.topStart,
                     children: [
-                      Container(
-                        padding: EdgeInsets.only(top: 5.0),
-                        child: Divider(
-                          thickness: 3.0,
-                          color: Colors.black45,
-                          indent: 55.0,
-                        ),
-                      ),
                       Text(
-                        DateFormat("dd/MM").format(DateTime.now()),
+                        DateFormat("dd/MM/yyyy").format(DateTime.now()),
                         style: TextStyle(color: Colors.black, fontSize: 20.0),
                       ),
                     ],

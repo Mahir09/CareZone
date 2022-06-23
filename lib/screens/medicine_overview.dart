@@ -1,7 +1,6 @@
-import 'package:carezone/providers/medicine_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '/providers/medicine_list.dart';
 import '../screens/add_medicine.dart';
 import '../widgets/medicine_grid.dart';
 
@@ -15,7 +14,6 @@ class _MedicineOverviewState extends State<MedicineOverview> {
 
   @override
   void initState() {
-    // Provider.of<MedicineList>(context).fetchAndSetMedicines();
     setState(() {
       _isLoading = true;
     });
@@ -45,14 +43,14 @@ class _MedicineOverviewState extends State<MedicineOverview> {
                 ),
               ],
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add Medicine',
         onPressed: () {
           Navigator.of(context).pushNamed(AddMedicine.routeName);
         },
         child: Icon(Icons.add),
-        elevation: 4.0,
+        elevation: 5.0,
       ),
     );
   }

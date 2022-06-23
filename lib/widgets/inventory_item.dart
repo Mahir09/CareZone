@@ -1,17 +1,11 @@
-import 'package:carezone/providers/medicine.dart';
+import '/providers/medicine.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class InventoryItem extends StatelessWidget {
-  /*  final String id;
-  final String title;
-  final int quantity;
-
-  const InventoryItem(this.id, this.title, this.quantity); */
   @override
   Widget build(BuildContext context) {
     final med = Provider.of<Medicine>(context);
-    //final counter = Provider.of<MedicineProvider>(context).count;
     return Column(
       children: <Widget>[
         Container(
@@ -33,7 +27,10 @@ class InventoryItem extends StatelessWidget {
             ],
           ),
         ),
-        Divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: Divider(thickness: 1),
+        ),
       ],
     );
   }

@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/MedicineType.dart';
 import '../providers/medicine_list.dart';
+import '../widgets/medicine_type_card.dart';
 
 class EditMedicine extends StatefulWidget {
   static const routeName = '/editMedicine';
@@ -16,7 +18,6 @@ class EditMedicine extends StatefulWidget {
 class _EditMedicineState extends State<EditMedicine> {
   TimeOfDay _selectedTime;
 
-  //var _isLoading = false;
   final _form = GlobalKey<FormState>();
 
   String formatTimeOfDay(TimeOfDay tod) {
@@ -27,18 +28,21 @@ class _EditMedicineState extends State<EditMedicine> {
   }
 
   var _editedMedicine = Medicine(
-      id: null,
-      title: '',
-      description: '',
-      quantity: 0,
-      alarmTime: null,
-      imageurl: '');
+    id: null,
+    title: '',
+    description: '',
+    quantity: 0,
+    alarmTime: null,
+    imageurl: '',
+    typeIndex: 0,
+  );
 
   var _initValues = {
     'title': '',
     'description': '',
     'price': '',
     'alarmTime': '',
+    'typeIndex': 0,
   };
 
   @override
@@ -52,10 +56,26 @@ class _EditMedicineState extends State<EditMedicine> {
         'quantity': _editedMedicine.quantity.toString(),
         'imageUrl': _editedMedicine.imageurl,
         'alarmTime': formatTimeOfDay(_editedMedicine.alarmTime),
+        'typeIndex': _editedMedicine.typeIndex,
       };
     }
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+  }
+
+  void medicineTypeClick(MedicineType medicine) {
+    setState(() {
+      medicineTypes.forEach((medicineType) => medicineType.isChoose = false);
+      medicineTypes[medicineTypes.indexOf(medicine)].isChoose = true;
+      _editedMedicine = Medicine(
+        id: _editedMedicine.id,
+        title: _editedMedicine.title,
+        description: _editedMedicine.description,
+        alarmTime: _editedMedicine.alarmTime,
+        imageurl: _editedMedicine.imageurl,
+        quantity: _editedMedicine.quantity,
+        typeIndex: medicineTypes.indexOf(medicine),
+      );
+    });
   }
 
   void _saveForm() {
@@ -83,7 +103,9 @@ class _EditMedicineState extends State<EditMedicine> {
             description: _editedMedicine.description,
             alarmTime: _selectedTime,
             imageurl: _editedMedicine.imageurl,
-            quantity: _editedMedicine.quantity);
+            quantity: _editedMedicine.quantity,
+          typeIndex: _editedMedicine.typeIndex,
+        );
       });
     });
   }
@@ -101,119 +123,127 @@ class _EditMedicineState extends State<EditMedicine> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Form(
-          key: _form,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(10.0),
-                height: 250,
-                child: Image(
-                  image: _editedMedicine.imageurl != null
-                ? NetworkImage(_editedMedicine.imageurl)
-                  : NetworkImage(
-              'https://www.practostatic.com/practopedia-v2-images/res-750/aa8a521bcd0f4494ceb54bee5171d1c7c01ee09b1.jpg'),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Form(
+            key: _form,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+
+                TextFormField(
+                  initialValue: _initValues['title'],
+                  decoration: InputDecoration(
+                    helperText: 'Medicine Name',
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
+                  ),
+                  style: TextStyle(fontSize: 20),
+                  onSaved: (value) {
+                    _editedMedicine = Medicine(
+                        id: _editedMedicine.id,
+                        title: value,
+                        description: _editedMedicine.description,
+                        alarmTime: _editedMedicine.alarmTime,
+                        imageurl: _editedMedicine.imageurl,
+                        quantity: _editedMedicine.quantity,
+                      typeIndex: _editedMedicine.typeIndex,
+                    );
+                  },
+                ),
+                SizedBox(
                   width: double.infinity,
-                  height: 40,
-                  fit: BoxFit.fill,
+                  height: 20,
                 ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 20,
-              ),
-              TextFormField(
-                initialValue: _initValues['title'],
-                decoration: InputDecoration(
-                  helperText: 'Medicine Name',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
+                TextFormField(
+                  initialValue: _initValues['description'],
+                  decoration: InputDecoration(
+                    helperText: 'Description',
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
+                  ),
+                  maxLines: 5,
+                  style: TextStyle(fontSize: 20),
+                  onSaved: (value) {
+                    _editedMedicine = Medicine(
+                        id: _editedMedicine.id,
+                        title: _editedMedicine.title,
+                        description: value,
+                        alarmTime: _editedMedicine.alarmTime,
+                        imageurl: _editedMedicine.imageurl,
+                        quantity: _editedMedicine.quantity,
+                      typeIndex: _editedMedicine.typeIndex,
+                    );
+                  },
                 ),
-                style: TextStyle(fontSize: 20),
-                onSaved: (value) {
-                  _editedMedicine = Medicine(
-                      id: _editedMedicine.id,
-                      title: value,
-                      description: _editedMedicine.description,
-                      alarmTime: _editedMedicine.alarmTime,
-                      imageurl: _editedMedicine.imageurl,
-                      quantity: _editedMedicine.quantity);
-                },
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 20,
-              ),
-              TextFormField(
-                initialValue: _initValues['description'],
-                decoration: InputDecoration(
-                  helperText: 'Description',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
+                SizedBox(
+                  width: double.infinity,
+                  height: 20,
                 ),
-                style: TextStyle(fontSize: 20),
-                onSaved: (value) {
-                  _editedMedicine = Medicine(
-                      id: _editedMedicine.id,
-                      title: _editedMedicine.title,
-                      description: value,
-                      alarmTime: _editedMedicine.alarmTime,
-                      imageurl: _editedMedicine.imageurl,
-                      quantity: _editedMedicine.quantity);
-                },
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 20,
-              ),
-              TextFormField(
-                initialValue: _initValues['quantity'],
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  helperText: 'Quantity',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
+                TextFormField(
+                  initialValue: _initValues['quantity'],
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    helperText: 'Quantity',
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
+                  ),
+                  style: TextStyle(fontSize: 20),
+                  onSaved: (value) {
+                    _editedMedicine = Medicine(
+                        id: _editedMedicine.id,
+                        title: _editedMedicine.title,
+                        description: _editedMedicine.description,
+                        alarmTime: _editedMedicine.alarmTime,
+                        imageurl: _editedMedicine.imageurl,
+                        quantity: int.parse(value),
+                      typeIndex: _editedMedicine.typeIndex,
+                    );
+                  },
                 ),
-                style: TextStyle(fontSize: 20),
-                onSaved: (value) {
-                  _editedMedicine = Medicine(
-                      id: _editedMedicine.id,
-                      title: _editedMedicine.title,
-                      description: _editedMedicine.description,
-                      alarmTime: _editedMedicine.alarmTime,
-                      imageurl: _editedMedicine.imageurl,
-                      quantity: int.parse(value));
-                },
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text(_selectedTime == null
-                      ? formatTimeOfDay(_editedMedicine.alarmTime)
-                      : formatTimeOfDay(_selectedTime)),
-                  FlatButton(
-                    onPressed: _presentTimePicker,
-                    child: Text("Select Time"),
-                    textColor: Colors.white,
-                    color: Colors.green,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40.0)),
-                  )
-                ],
-              ),
-            ],
+                SizedBox(
+                  width: double.infinity,
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text(_selectedTime == null
+                        ? formatTimeOfDay(_editedMedicine.alarmTime)
+                        : formatTimeOfDay(_selectedTime)),
+                    FlatButton(
+                      onPressed: _presentTimePicker,
+                      child: Text("Select Time"),
+                      textColor: Colors.white,
+                      color: Colors.green,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40.0)),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 20,
+                ),Container(
+                  width: double.infinity,
+                  height: 130,
+                  child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      ...medicineTypes.map(
+                              (type) => MedicineTypeCard(type, medicineTypeClick))
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

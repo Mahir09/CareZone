@@ -125,7 +125,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
             tabs: [
               Tab(
                   child: Text(
-                'List',
+                'Medicines',
                 style: TextStyle(fontSize: 20.0),
               )),
               Tab(

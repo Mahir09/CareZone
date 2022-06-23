@@ -1,20 +1,10 @@
-import '/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
+import '/providers/auth.dart';
 import '../providers/logbook_provider.dart';
 import '../providers/medicine.dart';
 import '../screens/medicine_detail.dart';
-
-/* final String id;
-  final String title;
-  final imageurl;
-  final String description;
-  final TimeOfDay alarmtime;
-
-  MedicineItem(
-      this.id, this.title, this.imageurl, this.description, this.alarmtime); */
 
 class MedicineItem extends StatelessWidget {
   String formatTimeOfDay(TimeOfDay tod) {
@@ -32,12 +22,12 @@ class MedicineItem extends StatelessWidget {
     return GridTile(
       child: Center(
         child: Card(
-          elevation: 5.0,
+          elevation: .0,
           child: Container(
             height: MediaQuery.of(context).size.height / 3,
             width: MediaQuery.of(context).size.width / 2,
             decoration:
-                BoxDecoration(borderRadius: BorderRadius.circular(30.0)),
+                BoxDecoration(borderRadius: BorderRadius.circular(35.0)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -47,14 +37,23 @@ class MedicineItem extends StatelessWidget {
                         .pushNamed(MedicineDetail.routeName, arguments: med.id);
                   },
                   child: CircleAvatar(
-                    radius: 40.0,
+                    radius: 45.0,
                     backgroundColor: Colors.black,
-                    backgroundImage: med.imageurl != null
-                        ? NetworkImage(med.imageurl)
-                        : NetworkImage(
-                            'https://www.practostatic.com/practopedia-v2-images/res-750/aa8a521bcd0f4494ceb54bee5171d1c7c01ee09b1.jpg'),
+                    backgroundImage: med.typeIndex == 0
+                        ? AssetImage("assets/images/syrup.png")
+                        : med.typeIndex == 1
+                            ? AssetImage("assets/images/pills.png")
+                            : med.typeIndex == 2
+                                ? AssetImage("assets/images/capsule.png")
+                                : med.typeIndex == 3
+                                    ? AssetImage("assets/images/cream.png")
+                                    : med.typeIndex == 4
+                                        ? AssetImage("assets/images/drops.png")
+                                        : AssetImage(
+                                            "assets/images/syringe.png"),
                   ),
                 ),
+                SizedBox(height: 8.0),
                 Text(
                   med.title,
                   style: TextStyle(
@@ -63,30 +62,19 @@ class MedicineItem extends StatelessWidget {
                     fontSize: 18.0,
                   ),
                 ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                Text(med.description),
+                SizedBox(height: 5.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Icon(Icons.alarm),
                     Text(formatTimeOfDay(med.alarmTime)),
-                    FlatButton(
+                    IconButton(
                       onPressed: () {
                         log.addItem(med.id, med.title);
-                        //ERROR: Items out of the screen are not getting added to the logbook
-                        //TODO: Resolve this error
-                        //TODO: Check the logbook provider & changenotifier.value
                         med.updateCount(med.id, auth.token);
-                        //This function works correctly
-                        print(med.quantity);
                       },
-                      child: Text("Check"),
+                      icon: Icon(Icons.check),
                       color: Colors.lightBlueAccent,
-                      textColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40.0)),
                     ),
                   ],
                 ),
