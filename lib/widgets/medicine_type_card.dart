@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+
 import '../providers/MedicineType.dart';
 
 class MedicineTypeCard extends StatelessWidget {
   final MedicineType pillType;
   final Function handler;
+
   MedicineTypeCard(this.pillType, this.handler);
+
   @override
   Widget build(BuildContext context) {
     return Row(

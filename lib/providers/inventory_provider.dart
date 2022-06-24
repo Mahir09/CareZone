@@ -34,4 +34,3 @@ class InventoryProvider with ChangeNotifier {
     return invItems;
   }
 }
-

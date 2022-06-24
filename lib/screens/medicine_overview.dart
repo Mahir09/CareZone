@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '/providers/medicine_list.dart';
 import '../screens/add_medicine.dart';
 import '../widgets/medicine_grid.dart';
 
 class MedicineOverview extends StatefulWidget {
+  static const routeName = '/medicine-overview';
+
   @override
   _MedicineOverviewState createState() => _MedicineOverviewState();
 }

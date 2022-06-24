@@ -1,7 +1,9 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+
 import './medicine.dart';
 import '../widgets/custom_exceptions.dart';
 
@@ -18,20 +20,11 @@ class MedicineList with ChangeNotifier {
   var showEveningOnly = false;
 
   List<Medicine> get items {
-    if (showMorningOnly) {
-      return _items.where((meditem) => meditem.isMorning).toList();
-    }
-    if (showAfternoonOnly) {
-      return _items.where((meditem) => meditem.isAfternoon).toList();
-    }
-    if (showEveningOnly) {
-      return _items.where((meditem) => meditem.isEvening).toList();
-    }
     return [..._items];
   }
 
   Medicine findById(String id) {
-    return _items.firstWhere((med) => med?.id == id, orElse: () => null);
+    return _items.firstWhere((med) => med.id == id, orElse: () => null);
   }
 
   String formatTimeOfDay(TimeOfDay tod) {

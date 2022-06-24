@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import './medicine_item.dart';
 import '../providers/medicine_list.dart';
 
@@ -19,7 +20,8 @@ class MedicineGrid extends StatelessWidget {
         ? Center(
             child: Text(
               "No medicines added yet!",
-              style: TextStyle(fontSize: 50),
+              style:
+                  TextStyle(fontSize: MediaQuery.of(context).size.width * 0.07),
             ),
           )
         : GridView.builder(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
 import '/providers/auth.dart';
 import '../providers/logbook_provider.dart';
 import '../providers/medicine.dart';
@@ -22,7 +23,7 @@ class MedicineItem extends StatelessWidget {
     return GridTile(
       child: Center(
         child: Card(
-          elevation: .0,
+          elevation: 5.0,
           child: Container(
             height: MediaQuery.of(context).size.height / 3,
             width: MediaQuery.of(context).size.width / 2,
@@ -70,7 +71,7 @@ class MedicineItem extends StatelessWidget {
                     Text(formatTimeOfDay(med.alarmTime)),
                     IconButton(
                       onPressed: () {
-                        log.addItem(med.id, med.title);
+                        log.addItem(med.id, med.title, DateTime.now());
                         med.updateCount(med.id, auth.token);
                       },
                       icon: Icon(Icons.check),

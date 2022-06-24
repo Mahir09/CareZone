@@ -1,8 +1,9 @@
-import '../widgets/custom_exceptions.dart';
-import '/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '/providers/auth.dart';
 import '../constants.dart';
+import '../widgets/custom_exceptions.dart';
 
 enum AuthMode { Signup, Login }
 

@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
-class MedicineType{
-
+class MedicineType {
   String name;
   Widget image;
   bool isChoose;
-  MedicineType(this.name,this.image,this.isChoose);
 
+  MedicineType(this.name, this.image, this.isChoose);
 }
 
 final List<MedicineType> medicineTypes = [

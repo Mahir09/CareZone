@@ -1,5 +1,5 @@
 import 'package:carezone/providers/medicine.dart';
-import 'package:carezone/widgets/tabbar_screen.dart';
+import 'package:carezone/screens/tabbar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -98,12 +98,12 @@ class _EditMedicineState extends State<EditMedicine> {
       setState(() {
         _selectedTime = pickedTime;
         _editedMedicine = Medicine(
-            id: _editedMedicine.id,
-            title: _editedMedicine.title,
-            description: _editedMedicine.description,
-            alarmTime: _selectedTime,
-            imageurl: _editedMedicine.imageurl,
-            quantity: _editedMedicine.quantity,
+          id: _editedMedicine.id,
+          title: _editedMedicine.title,
+          description: _editedMedicine.description,
+          alarmTime: _selectedTime,
+          imageurl: _editedMedicine.imageurl,
+          quantity: _editedMedicine.quantity,
           typeIndex: _editedMedicine.typeIndex,
         );
       });
@@ -130,7 +130,6 @@ class _EditMedicineState extends State<EditMedicine> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-
                 TextFormField(
                   initialValue: _initValues['title'],
                   decoration: InputDecoration(
@@ -143,12 +142,12 @@ class _EditMedicineState extends State<EditMedicine> {
                   style: TextStyle(fontSize: 20),
                   onSaved: (value) {
                     _editedMedicine = Medicine(
-                        id: _editedMedicine.id,
-                        title: value,
-                        description: _editedMedicine.description,
-                        alarmTime: _editedMedicine.alarmTime,
-                        imageurl: _editedMedicine.imageurl,
-                        quantity: _editedMedicine.quantity,
+                      id: _editedMedicine.id,
+                      title: value,
+                      description: _editedMedicine.description,
+                      alarmTime: _editedMedicine.alarmTime,
+                      imageurl: _editedMedicine.imageurl,
+                      quantity: _editedMedicine.quantity,
                       typeIndex: _editedMedicine.typeIndex,
                     );
                   },
@@ -170,12 +169,12 @@ class _EditMedicineState extends State<EditMedicine> {
                   style: TextStyle(fontSize: 20),
                   onSaved: (value) {
                     _editedMedicine = Medicine(
-                        id: _editedMedicine.id,
-                        title: _editedMedicine.title,
-                        description: value,
-                        alarmTime: _editedMedicine.alarmTime,
-                        imageurl: _editedMedicine.imageurl,
-                        quantity: _editedMedicine.quantity,
+                      id: _editedMedicine.id,
+                      title: _editedMedicine.title,
+                      description: value,
+                      alarmTime: _editedMedicine.alarmTime,
+                      imageurl: _editedMedicine.imageurl,
+                      quantity: _editedMedicine.quantity,
                       typeIndex: _editedMedicine.typeIndex,
                     );
                   },
@@ -197,12 +196,12 @@ class _EditMedicineState extends State<EditMedicine> {
                   style: TextStyle(fontSize: 20),
                   onSaved: (value) {
                     _editedMedicine = Medicine(
-                        id: _editedMedicine.id,
-                        title: _editedMedicine.title,
-                        description: _editedMedicine.description,
-                        alarmTime: _editedMedicine.alarmTime,
-                        imageurl: _editedMedicine.imageurl,
-                        quantity: int.parse(value),
+                      id: _editedMedicine.id,
+                      title: _editedMedicine.title,
+                      description: _editedMedicine.description,
+                      alarmTime: _editedMedicine.alarmTime,
+                      imageurl: _editedMedicine.imageurl,
+                      quantity: int.parse(value),
                       typeIndex: _editedMedicine.typeIndex,
                     );
                   },
@@ -221,7 +220,7 @@ class _EditMedicineState extends State<EditMedicine> {
                       onPressed: _presentTimePicker,
                       child: Text("Select Time"),
                       textColor: Colors.white,
-                      color: Colors.green,
+                      color: Colors.lightBlueAccent,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40.0)),
                     )
@@ -230,7 +229,8 @@ class _EditMedicineState extends State<EditMedicine> {
                 SizedBox(
                   width: double.infinity,
                   height: 20,
-                ),Container(
+                ),
+                Container(
                   width: double.infinity,
                   height: 130,
                   child: ListView(
@@ -238,7 +238,7 @@ class _EditMedicineState extends State<EditMedicine> {
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
                       ...medicineTypes.map(
-                              (type) => MedicineTypeCard(type, medicineTypeClick))
+                          (type) => MedicineTypeCard(type, medicineTypeClick))
                     ],
                   ),
                 ),

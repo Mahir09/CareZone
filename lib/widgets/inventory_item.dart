@@ -1,6 +1,7 @@
-import '/providers/medicine.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '/providers/medicine.dart';
 
 class InventoryItem extends StatelessWidget {
   @override

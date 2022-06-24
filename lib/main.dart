@@ -2,10 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '/screens/medicine_overview.dart';
 import 'providers/auth.dart';
 import 'providers/inventory_provider.dart';
 import 'providers/logbook_provider.dart';
-import 'providers/medicine.dart';
 import 'providers/medicine_list.dart';
 import 'screens/add_medicine.dart';
 import 'screens/auth_screen.dart';
@@ -14,8 +15,8 @@ import 'screens/inventory.dart';
 import 'screens/logbook_screen.dart';
 import 'screens/medicine_detail.dart';
 import 'screens/splash_screen.dart';
+import 'screens/tabbar_screen.dart';
 import 'services/notifications.dart';
-import 'widgets/tabbar_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,9 +41,6 @@ class MyApp extends StatelessWidget {
           update: (context, auth, previousLogs) => LogBookProvider(auth.token,
               auth.userID, previousLogs == null ? [] : previousLogs.items),
           create: (context) => LogBookProvider(null, null, []),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => MedicineProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => InventoryProvider(),
@@ -71,6 +69,8 @@ class MyApp extends StatelessWidget {
                           ? SplashScreen()
                           : AuthScreen()),
           routes: {
+            TabBarScreen.routeName: (ctx) => TabBarScreen(),
+            MedicineOverview.routeName: (ctx) => MedicineOverview(),
             MedicineDetail.routeName: (ctx) => MedicineDetail(),
             LogbookScreen.routeName: (ctx) => LogbookScreen(),
             Inventory.routeName: (ctx) => Inventory(),

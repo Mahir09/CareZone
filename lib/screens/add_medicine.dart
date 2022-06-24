@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'dart:math';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
 import '/providers/medicine.dart';
 import '/providers/medicine_list.dart';
 import '/services/notifications.dart';
@@ -64,31 +65,6 @@ class _AddMedicineState extends State<AddMedicine> {
 
   Reference storageReference = FirebaseStorage.instance.ref();
 
-  void pickImage() async {
-    final picker = ImagePicker();
-    pickedImage = await picker.getImage(
-        source: ImageSource.camera,
-        maxHeight: 480,
-        maxWidth: 640,
-        imageQuality: 50);
-    final pickedImageFile = File(pickedImage.path);
-    Reference ref = storageReference.child("gs://$pickedImageFile");
-    UploadTask uploadTask = ref.putFile(pickedImageFile);
-    TaskSnapshot taskSnapshot = await uploadTask;
-    String imageurl = await taskSnapshot.ref.getDownloadURL();
-    print(imageurl);
-    setState(() {
-      pickedImage = pickedImageFile;
-      _editedMedicine = Medicine(
-          id: null,
-          title: _editedMedicine.title,
-          description: _editedMedicine.description,
-          alarmTime: _editedMedicine.alarmTime,
-          imageurl: imageurl,
-          quantity: _editedMedicine.quantity);
-    });
-  }
-
   void medicineTypeClick(MedicineType medicine) {
     setState(() {
       medicineTypes.forEach((medicineType) => medicineType.isChoose = false);
@@ -102,7 +78,6 @@ class _AddMedicineState extends State<AddMedicine> {
         quantity: _editedMedicine.quantity,
         typeIndex: medicineTypes.indexOf(medicine),
       );
-      // print(medicineTypes[medicineTypes.indexOf(medicine)].name);
     });
   }
 
@@ -286,7 +261,7 @@ class _AddMedicineState extends State<AddMedicine> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 15),
+                      SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
@@ -303,26 +278,6 @@ class _AddMedicineState extends State<AddMedicine> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(40.0)),
                           )
-                        ],
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 40.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          CircleAvatar(
-                            radius: 40.0,
-                            backgroundImage: pickedImage != null
-                                ? NetworkImage(_editedMedicine.imageurl)
-                                : null,
-                          ),
-                          FlatButton.icon(
-                            onPressed: pickImage,
-                            icon: Icon(Icons.add_a_photo_outlined),
-                            label: Text("Add an image"),
-                          ),
                         ],
                       ),
                       SizedBox(
@@ -358,7 +313,7 @@ class _AddMedicineState extends State<AddMedicine> {
                         child: Text('Save'),
                         height: 50.0,
                         textColor: Colors.white,
-                        color: Colors.lightBlueAccent,
+                        color: Colors.green,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                       ),

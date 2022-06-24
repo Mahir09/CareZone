@@ -3,13 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '/providers/auth.dart';
 import '/screens/auth_screen.dart';
-import '../screens/inventory.dart';
-import '../screens/logbook_screen.dart';
-import '../screens/medicine_overview.dart';
+import 'inventory.dart';
+import 'logbook_screen.dart';
+import 'medicine_overview.dart';
 
 class TabBarScreen extends StatefulWidget {
+  static const routeName = '/tabbar-screen';
+
   @override
   _TabBarScreenState createState() => _TabBarScreenState();
 }

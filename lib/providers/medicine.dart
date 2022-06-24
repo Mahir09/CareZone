@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class Medicine with ChangeNotifier {
@@ -9,7 +8,8 @@ class Medicine with ChangeNotifier {
   String title;
   String description;
   TimeOfDay alarmTime;
-  var imageurl ;
+  var imageurl;
+
   int quantity;
   bool isTaken;
   bool isMorning;
@@ -35,7 +35,7 @@ class Medicine with ChangeNotifier {
 
   Future<void> updateCount(String id, String token) async {
     final url =
-        'https://flutter-carezone-default-rtdb.firebaseio.com/medicines/$id.json?auth=$token';
+        'https://medrem-38ff2-default-rtdb.firebaseio.com/medicines/$id.json?auth=$token';
     try {
       await http.patch(Uri.parse(url),
           body: json.encode({
@@ -45,32 +45,5 @@ class Medicine with ChangeNotifier {
     } catch (error) {
       throw (error);
     }
-  }
-}
-
-
-class MedicineProvider with ChangeNotifier {
-  final meds = Provider.of<Medicine>(context);
-
-  static BuildContext get context => null;
-
-  double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
-
-  void toggleMorningStatus() {
-    if (toDouble(meds.alarmTime) >= 6.00 && toDouble(meds.alarmTime) < 12.00)
-      meds.isMorning = !meds.isMorning;
-    notifyListeners();
-  }
-
-  void toggleAfternoonStatus() {
-    if (toDouble(meds.alarmTime) >= 12.00 && toDouble(meds.alarmTime) < 4.00)
-      meds.isAfternoon = !meds.isAfternoon;
-    notifyListeners();
-  }
-
-  void toggleEveningStatus() {
-    if (toDouble(meds.alarmTime) >= 4.00 && toDouble(meds.alarmTime) < 6.00)
-      meds.isEvening = !meds.isEvening;
-    notifyListeners();
   }
 }

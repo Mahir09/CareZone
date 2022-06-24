@@ -1,6 +1,9 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
+import '../widgets/custom_exceptions.dart';
 
 class LogbookItem {
   final String id;
@@ -47,16 +50,16 @@ class LogBookProvider with ChangeNotifier {
     _items = _loadedLogItems.reversed.toList();
   }
 
-  Future<void> addItem(String id, String title) async {
-    final date = DateTime.now();
+  Future<void> addItem(String id, String title, DateTime dateTime) async {
     final url =
         'https://medrem-38ff2-default-rtdb.firebaseio.com/logitems/$userID.json?auth=$authToken';
     try {
       final response = await http.post(Uri.parse(url),
           body: json.encode({
             'title': title,
-            'dateTime':
-                DateTime(date.hour, date.minute).toIso8601String(), //FIX this
+            'dateTime': DateTime(dateTime.month, dateTime.day, dateTime.hour,
+                    dateTime.minute)
+                .toIso8601String(), //FIX this
           }));
       _items.add(LogbookItem(
           id: json.decode(response.body)['name'],
@@ -66,5 +69,22 @@ class LogBookProvider with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+  }
+
+  Future<void> deleteLogItem(String id) async {
+    final url =
+        'https://medrem-38ff2-default-rtdb.firebaseio.com/logitems/$userID/$id.json?auth=$authToken';
+    final existingLogIndex = _items.indexWhere((log) => log.id == id);
+    var existingLog = _items[existingLogIndex];
+
+    _items.removeAt(existingLogIndex);
+    notifyListeners();
+    final response = await http.delete(Uri.parse(url));
+    if (response.statusCode >= 400) {
+      _items.insert(existingLogIndex, existingLog);
+      notifyListeners();
+      throw CustomExceptions('Something went wrong, Could not delete');
+    }
+    existingLog = null;
   }
 }

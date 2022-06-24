@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../widgets/custom_exceptions.dart';
 
 class Auth with ChangeNotifier {
@@ -62,14 +64,13 @@ class Auth with ChangeNotifier {
           'token': _token,
           'userId': _userId,
           'expiryDate': _expiryDate.toIso8601String(),
-          'emailId' : email,
-          'userName' : userName,
+          'emailId': email,
+          'userName': userName,
         },
       );
       prefs.setString('userData', userData);
 
       notifyListeners();
-      _autoLogout();
     } catch (error) {
       throw error;
     }
@@ -80,7 +81,8 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signIn(String email, String password, String userName) async {
-    return _authenticate(email, password, userName, 'accounts:signInWithPassword');
+    return _authenticate(
+        email, password, userName, 'accounts:signInWithPassword');
   }
 
   Future<bool> tryAutoLogIn() async {
@@ -97,9 +99,7 @@ class Auth with ChangeNotifier {
     _token = extractedData['token'];
     _userId = extractedData['userId'];
     _expiryDate = DateTime.parse(extractedData['expiryDate']);
-    // print("Token : $_token\nUserId : $_userId\nExpiryDate : $_expiryDate");
     notifyListeners();
-    _autoLogout();
     return true;
   }
 
@@ -116,11 +116,4 @@ class Auth with ChangeNotifier {
     prefs.clear();
   }
 
-  void _autoLogout() {
-    if (authTimer != null) {
-      authTimer.cancel();
-    }
-    final expiryTime = _expiryDate.difference(DateTime.now()).inSeconds;
-    authTimer = Timer(Duration(seconds: expiryTime), logout);
-  }
 }

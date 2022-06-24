@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/medicine_list.dart';
 import '../screens/edit_medicine.dart';
-import '../widgets/tabbar_screen.dart';
+import 'tabbar_screen.dart';
 
 class MedicineDetail extends StatefulWidget {
   static const routeName = '/medicine-detail';
@@ -21,22 +22,28 @@ class _MedicineDetailState extends State<MedicineDetail> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final medicineId = ModalRoute.of(context).settings.arguments as String;
     final loadedMedicine =
         Provider.of<MedicineList>(context).findById(medicineId);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(loadedMedicine.title),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              Navigator.of(context).pushNamed(EditMedicine.routeName,
-                  arguments: loadedMedicine.id);
-            },
-          ),
-          IconButton(
+    return loadedMedicine != null
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text(loadedMedicine.title),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(EditMedicine.routeName,
+                        arguments: loadedMedicine.id);
+                  },
+                ),
+                IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
               showDialog(
@@ -45,32 +52,31 @@ class _MedicineDetailState extends State<MedicineDetail> {
                   title: Text('Delete Medicine'),
                   content: Text("Do you want to delete this medicine?"),
                   actions: <Widget>[
-                    FlatButton(
-                      child: Text("No"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    FlatButton(
-                        child: Text('Yes'),
-                        onPressed: () {
-                          try {
-                            Provider.of<MedicineList>(context, listen: false)
-                                .deleteItem(loadedMedicine.id);
-                          } catch (error) {
-                            Scaffold.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Deleting failed'),
-                              ),
-                            );
-                          }
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TabBarScreen()),
-                          );
-                        }),
-                  ],
+                          FlatButton(
+                            child: Text("No"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('Yes'),
+                            onPressed: () {
+                              try {
+                                Provider.of<MedicineList>(context,
+                                        listen: false)
+                                    .deleteItem(loadedMedicine.id);
+                                Navigator.of(context).pushReplacementNamed(
+                                    TabBarScreen.routeName);
+                              } catch (error) {
+                                Scaffold.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Deleting failed'),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ],
                 ),
               );
             },
@@ -156,17 +162,18 @@ class _MedicineDetailState extends State<MedicineDetail> {
                 decoration: InputDecoration(
                   hintText: loadedMedicine.quantity.toString(),
                   helperText: 'Quantity',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
+                  contentPadding: EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 30.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0)),
+                      ),
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ],
                 ),
-                style: TextStyle(fontSize: 20),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          )
+        : CircularProgressIndicator();
   }
 }
