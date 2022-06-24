@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:name="${applicationName}"
-        android:label="carezone"
+        android:label="CareZone"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -35,12 +35,20 @@
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
               />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN"/>-->
+<!--                <category android:name="android.intent.category.LAUNCHER"/>-->
+<!--                <category android:name="android.intent.category.BROWSABLE"/>-->
+<!--                -->
+<!--            </intent-filter>-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+            <intent-filter>
                 <data android:host="medrem.page.link" android:scheme="https"/>
                 <data android:host="medrem.page.link" android:scheme="http"/>
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
             
         </activity>
