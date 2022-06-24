@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>62582569729-faccftle6dpqsvv3ves4bq1o3einrl5e.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.62582569729-faccftle6dpqsvv3ves4bq1o3einrl5e</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>62582569729-ncp3ft7m9npd8dfhsmktudsr93nvo3jb.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCUQ0T4_3MraNUa1zyBswWWEqwFAMIRg9E</string>
+	<key>GCM_SENDER_ID</key>
+	<string>62582569729</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.carezone</string>
+	<key>PROJECT_ID</key>
+	<string>medrem-38ff2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>medrem-38ff2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:62582569729:ios:409a4eff5524216e353900</string>
+	<key>DATABASE_URL</key>
+	<string>https://medrem-38ff2-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
